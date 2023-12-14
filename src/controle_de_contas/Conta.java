@@ -47,9 +47,61 @@ public class Conta {
             }
         } catch (SQLException e) {
             throw new BdException(e.getMessage());
-            
+
         } finally {
             BD.fecharStatementAndResultSet(st,rs);
+        }
+    }
+
+    public void criarConta(int id, String nomeTitular, Double saldo) {
+        try {
+            ps = conn.prepareStatement("insert into conta (id, nomeTitular, saldo) values " +
+                    "(?,?,?)");
+
+            ps.setInt(1,id);
+            ps.setString(2, nomeTitular);
+            ps.setDouble(3,saldo);
+
+            ps.executeUpdate();
+            System.out.println("Conta criada e salva no banco de dados com sucesso!");
+
+
+        } catch (SQLException e) {
+            throw new BdException(e.getMessage());
+
+        } finally {
+            BD.fecharStatement(ps);
+        }
+    }
+
+    public void fazerTranferencia(int seuId, int idDaOutraConta, Double valor) {
+        try {
+            diminuirSaldo(seuId, valor);
+            ps = conn.prepareStatement("update conta set saldo = saldo + " + valor + " where id = " + idDaOutraConta);
+
+            ps.executeUpdate();
+
+            System.out.println("Transferência realizada com sucesso!");
+
+        } catch (SQLException e) {
+            throw new BdException(e.getMessage());
+
+        } finally {
+            BD.fecharStatement(ps);
+        }
+    }
+
+    private void diminuirSaldo(int id, Double valor){
+        try {
+            ps = conn.prepareStatement("update conta set saldo = saldo - " + valor + "where id = " + id);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new BdException(e.getMessage());
+
+        } finally {
+            BD.fecharStatement(ps);
         }
     }
 }
