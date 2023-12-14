@@ -22,7 +22,7 @@ public class Conta {
             st = conn.createStatement();
             rs = st.executeQuery("select id, nomeTitular from conta");
 
-            System.out.println("Contas Disponíveis para fazer pix:");
+            System.out.println("Contas Disponíveis para fazer transferência:");
             while (rs.next()){
 
                 System.out.println("Id: "+ rs.getInt("id") + " Titular: " + rs.getString("nomeTitular"));
@@ -96,6 +96,22 @@ public class Conta {
             ps = conn.prepareStatement("update conta set saldo = saldo - " + valor + "where id = " + id);
 
             ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new BdException(e.getMessage());
+
+        } finally {
+            BD.fecharStatement(ps);
+        }
+    }
+
+    public void deletarConta(int id) {
+        try {
+           ps = conn.prepareStatement("delete from conta where id = "+ id);
+
+           ps.executeUpdate();
+
+            System.out.println("Conta deletada com sucesso!");
 
         } catch (SQLException e) {
             throw new BdException(e.getMessage());
