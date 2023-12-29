@@ -76,18 +76,45 @@ public class Conta {
 
     public void fazerTranferencia(int seuId, int idDaOutraConta, Double valor) {
         try {
-            diminuirSaldo(seuId, valor);
-            ps = conn.prepareStatement("update conta set saldo = saldo + " + valor + " where id = " + idDaOutraConta);
+            double novoSaldo = pegaSaldoAtual(seuId) - valor;
 
-            ps.executeUpdate();
+            if (novoSaldo < 0) {
+                throw new BdException("ERRO! VALOR MAIOR QUE O SALDO ATUAL!");
 
-            System.out.println("Transferência realizada com sucesso!");
+            } else {
+                diminuirSaldo(seuId, valor);
+
+                ps = conn.prepareStatement("update conta set saldo = saldo + " + valor + " where id = " + idDaOutraConta);
+
+                ps.executeUpdate();
+
+                System.out.println("Transferência realizada com sucesso!");
+            }
 
         } catch (SQLException e) {
             throw new BdException(e.getMessage());
 
         } finally {
             BD.fecharStatement(ps);
+        }
+    }
+
+    private double pegaSaldoAtual(int seuId) {
+        try {
+            double saldo = 0.00;
+
+            st = conn.createStatement();
+            rs = st.executeQuery("select saldo from conta where id = " + seuId);
+
+            while (rs.next()) {
+                saldo = rs.getDouble("saldo");
+            }
+            return saldo;
+        } catch (SQLException e) {
+            throw new BdException(e.getMessage());
+
+        } finally {
+            BD.fecharStatementAndResultSet(st, rs);
         }
     }
 
@@ -107,11 +134,11 @@ public class Conta {
 
     public void deletarConta(int id) {
         try {
-           ps = conn.prepareStatement("delete from conta where id = "+ id);
+           ps = conn.prepareStatement("delete from conta where id = " + id);
 
            ps.executeUpdate();
 
-            System.out.println("Conta deletada com sucesso!");
+           System.out.println("Conta deletada com sucesso!");
 
         } catch (SQLException e) {
             throw new BdException(e.getMessage());
