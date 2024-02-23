@@ -2,7 +2,7 @@
 
 ## Sobre o Sistema
 
-Sistema de Conta de Banco criado com Java e banco de dados MySQL com orientação a objetos, funções e tratamento de exceções (sem interface gráfica), que pode ser utilizado para a criação de contas bancárias
+Sistema de Conta de Banco criado com Java e JDBC com banco de dados MySQL, orientação a objetos, funções e tratamento de exceções (sem interface gráfica), que pode ser utilizado para a criação de contas bancárias
 
 ## Fotos do Sistema
 
@@ -14,6 +14,7 @@ Sistema de Conta de Banco criado com Java e banco de dados MySQL com orientaçã
 
 - Java
 - Banco de dados MySQL
+- JDBC
 
 ## Conhecimentos usados
 - Lógica de Programação
